@@ -34,8 +34,8 @@ DUST_LON_MIN, DUST_LON_MAX = -180, 180
 
 
 N_DATA      = config["time"]["tr_duration"]/config["time"]["step"]
-N_LEVELS    = config["height"]["top"]/config["flecpart"]["no_particles"]
-N_PARTICLES = config["flecpart"]["no_particles"]
+N_LEVELS    = config["height"]["top"]/config["flexpart"]["no_particles"]
+N_PARTICLES = config["flexpart"]["no_particles"]
 
 # ADDED OR SUBSTRACTED TO Smoke height regression 
 H_UVAI_TROPO_ADD = 2
