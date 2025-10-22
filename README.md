@@ -51,7 +51,7 @@ pip install -r requirements.txt
 python src/trails/main.py
 ```
 
-### Confg files
+### Config files
 
 TRAILS can be configured using TOML files located in `config/station_name.toml`. Examples are provided for station Leipzig. For each station, the configuration file should be updated with the corresponding directories for the input grids. Jupyter notebooks are provided to create OMPS UVAI global grids from swaths, as well as for MODIS/VIIRS
 
