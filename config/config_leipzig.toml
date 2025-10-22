@@ -1,20 +1,19 @@
 # configuration file for TRAILS
 
-dataset = "OMPS"
-output_dir    = "/projekt1/remsens/work/jroschke/repositories/TRAILS/data/output/"
-plot_dir      = "/projekt1/remsens/work/jroschke/data/Leipzig/Tropos/TRACE/leipzig/figures/"
-traj_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2023/"
-partposit_dir = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2023/" 
 
-frp_dir = "/projekt1/remsens/work/jroschke/data/MODIS/"
-omps_dir = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/"
-LCType_dir = "/projekt1/remsens/work/jroschke/data/"
+output_dir    = "/path_to_/output/"
+plot_dir      = "/path_to_/figures/"
+traj_dir      = "/path_to_/flexpart_particle_positions/"
+partposit_dir = "/path_to_/flexpart_particle_positions/" 
 
+frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
+omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
+LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
 
 [time]
     # dates to be processed
-    begin = '2023-05-01'
-    end   = '2023-07-31'
+    begin = 'YYYY-MM-DD'
+    end   = 'YYYY-MM-DD'
     # time step for which trajectories are calculated
     step = 3
     # duration of each trajectory
