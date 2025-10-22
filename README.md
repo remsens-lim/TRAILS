@@ -64,7 +64,6 @@ config_file = project_root / "config" / "station_name.toml"
 ```toml
 # configuration file for TRAILS
 
-dataset = "OMPS"
 output_dir    = "/path_to_/output/"
 plot_dir      = "/path_to_/figures/"
 traj_dir      = "/path_to_/flexpart_particle_positions/"
