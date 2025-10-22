@@ -68,11 +68,11 @@ def swaths_to_grd(paths_omps):
 def create_nc_dataset(obs_date, uvai_mean, uvai_max): 
     ds = xr.Dataset(
             {
-                # 4D Variables 
+                # 2D Variables 
                 'uvai_mean': (('longitude' , 'latitude'), uvai_mean.T,
                         {'long_name': "Aerosol Index" , 'units': "" , 
                          'description': "OMPS Aerosol Index (PyroCumuloNimbus) layer"}),
-                 # 4D Variables 
+                 # 2D Variables 
                 'uvai_max': (('longitude' , 'latitude'), uvai_max.T,
                         {'long_name': "Aerosol Index" , 'units': "" , 
                          'description': "OMPS Aerosol Index (PyroCumuloNimbus) layer"}),
