@@ -2,8 +2,7 @@
 ### **TRAjectory-based Identification of Lofted Smoke**
 
 **TRAILS** is a Python-based tool for attributing the influence of **wildfire smoke** on air masses.  
-It extends the automated air mass source attribution tool from  
-**Radenz et al. (2021)** → [trace_airmass_source](https://github.com/martin-rdz/trace_airmass_source).
+It extends the automated air mass source attribution tool of  [Radenz et al. (2021)](https://acp.copernicus.org/articles/21/3015/2021/) . Have a look at the corresponding github repository to run FLEXPART via docker here → [trace_airmass_source](https://github.com/martin-rdz/trace_airmass_source).
 
 TRAILS combines:
 - **Air mass transport simulations** from the **FLEXPART** particle dispersion model  
