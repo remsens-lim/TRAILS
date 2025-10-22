@@ -1,19 +1,40 @@
-# TRAILS - TRAjectory based Identification of Lofted Smoke
+# TRAILS  
+### **TRAjectory-based Identification of Lofted Smoke**
 
-A Python-based tool for attributing the influence of wildfire smoke using airparcel tracer from FLEXPART backward trajectories constrained by OMPS UVAI data.
+**TRAILS** is a Python-based tool for attributing the influence of **wildfire smoke** on air masses.  
+It extends the automated air mass source attribution tool from  
+**Radenz et al. (2021)** → [trace_airmass_source](https://github.com/martin-rdz/trace_airmass_source).
 
-## 📋 Overview
+TRAILS combines:
+- **Air mass transport simulations** from the **FLEXPART** particle dispersion model  
+- **Satellite observations** of the **OMPS Ultraviolet Aerosol Index (UVAI)**  
+- **Active fire data** from **MODIS/VIIRS**
 
-TRAILS (TRAjectory based Identification of Lofted Smoke) processes FLEXPART particle positions to classify the potential influence of particles by type (smoke, dust, stratospheric smoke, etc.) using satellite observations from OMPS UVAI and MODIS FRP data.
+Full documentation and methodology are detailed in the accompanying publication:  
+**_[CITATION TO BE ADDED]_**
 
-## 🚀 Quick Start
+---
+
+## Overview
+
+**TRAILS** (TRAjectory-based Identification of Lofted Smoke) processes **FLEXPART particle positions** to classify the influence of different air mass types — including **smoke**, **dust**, and **stratospheric smoke** — using **OMPS UVAI** and **MODIS FRP** satellite data.
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-- Python 3.8+
-- FLEXPART output data
-- OMPS UVAI NetCDF files
-- MODIS FRP data
+Before running TRAILS, ensure you have:
+
+- **Python 3.8+**
+- **FLEXPART particle position data**  
+  (see [trace_airmass_source](https://github.com/martin-rdz/trace_airmass_source) for running FLEXPART via Docker)
+- **OMPS UVAI** NetCDF files *(see Jupyter notebooks for preprocessing examples)*
+- **MODIS FRP** NetCDF files *(see Jupyter notebooks for preprocessing examples)*
+
+---
+
 
 ### Installation
 
@@ -21,38 +42,107 @@ TRAILS (TRAjectory based Identification of Lofted Smoke) processes FLEXPART part
 ```bash
 git clone https://github.com/yourusername/TRAILS.git
 cd TRAILS
-
+```
+2. **Install dependencies:**
+```bash
 pip install -r requirements.txt
-
+```
+3. **Run the main script:**
+```bash
 python src/trails/main.py
-
 ```
 
-### Configuration
+### Confg files
 
-The tool is configured cai config/config_leipzig.toml:
+TRAILS can be configured using TOML files located in `config/station_name.toml`. Examples are provided for station Leipzig. For each station, the configuration file should be updated with the corresponding directories for the input grids. Jupyter notebooks are provided to create OMPS UVAI global grids from swaths, as well as for MODIS/VIIRS
+
+#### Directories
 ```toml
-# Main directories
-output_dir = "/path/to/output/"
-traj_dir = "/path/to/flexpart/trajectories/"
-partposit_dir = "/path/to/particle/positions/"
+# configuration file for TRAILS
 
-# Time settings
+dataset = "OMPS"
+output_dir    = "/path_to_/output/"
+plot_dir      = "/path_to_/figures/"
+traj_dir      = "/path_to_/flexpart_particle_positions/"
+partposit_dir = "/path_to_/flexpart_particle_positions/" 
+
+frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
+omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
+LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
+```
+#### Time settings
+Define dates to process and time resolution (step). Trajectories are calculated every 3 hours over 10 days (-240 hours backward).
+```toml
+
 [time]
-begin = '2023-05-01'  # Start date
-end = '2023-07-31'    # End date  
-step = 3              # Time step in hours
-tr_duration = -240    # Trajectory duration in hours
-
-# FLEXPART settings
+    # dates to be processed
+    begin = '2023-05-01'
+    end   = '2023-07-31'
+    # time step for which trajectories are calculated
+    step = 3
+    # duration of each trajectory
+    tr_duration = -240
+```
+#### FLEXPART settings
+500 particles are traced back at each height level, from 500 m up to 12 km, every 500 m.
+```toml
 [flexpart]
-no_particles = 500    # Number of particles per release
-species = 24          # FLEXPART species ID
+    no_particles = 500
+    rel_before_minutes = 5
+    rel_after_minutes = 0
+    rel_pm_height = 200
+    species = 24
+    outstep = 3
 
-# Height settings  
+
 [height]
-top = 12000          # Top height in meters
-base = 500           # Base height in meters
-interval = 500       # Height interval in meters
+    top =  12000
+    base = 500
+    interval = 500
 ```
 
+#### Station info 
+```toml
+
+[station]
+   name = 'Leipzig, Germany'
+   short_name = 'leipzig'
+   lat = 51.3397
+   lon = 12.3731
+   altitude = 113
+```
+In ```python main.py``` u can also change thresholds as explained in the manuscript:
+
+```python
+# Constants
+AFRICA_LAT_MIN, AFRICA_LAT_MAX = -35, 37
+AFRICA_LON_MIN, AFRICA_LON_MAX = -20, 55
+
+DUST_LAT_MIN, DUST_LAT_MAX = -30, 30
+DUST_LON_MIN, DUST_LON_MAX = -180, 180
+
+
+N_DATA      = config["time"]["tr_duration"]/config["time"]["step"]
+N_LEVELS    = config["height"]["top"]/config["flexpart"]["no_particles"]
+N_PARTICLES = config["flexpart"]["no_particles"]
+
+# ADDED OR SUBSTRACTED TO Smoke height regression 
+H_UVAI_TROPO_ADD = 2
+H_UVAI_TROPO_SUB = 1
+
+# mask clouds in uvai grid
+UVAI_THRESHOLD = 0.7
+
+# Stratospheric smoke uvai thresholds
+UVAI_STRAT_THRESHOLD = 10
+UVAI_STRAT_POST_THRESHOLD = 3
+
+# dust uvai maximum threshold and maximum plume height
+UVAI_DUST = 5
+H_DUST = 6000  # Height threshold for dust (in meters)
+
+# MODIS FRP thresholds
+MODIS_DEGREE = 1
+FRP_THRESHOLD = 50
+FRP_MAJOR_THRESHOLD = 100
+```
