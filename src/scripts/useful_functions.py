@@ -7,8 +7,8 @@ import natsort
 import datetime
 import geopandas as gpd
 import xarray as xr
-
-
+from shapely.geometry import Point
+import os
 ############################################################################################################################################
 #         OMPS         UV AEROSOL INDEX                         -                      SWATHS - TO - GRIDS
 ############################################################################################################################################
@@ -109,6 +109,146 @@ def create_nc_dataset(obs_date, uvai_mean, uvai_max):
 #                    MODIS         GRIDS
 ############################################################################################################################################
 
+
+
+def active_fires_per_date(df_active, date_min, date_max):
+    geometry = [Point(lon, lat) for lon, lat in zip(df_active['lon'], df_active['lat'])]
+    gdf_active = gpd.GeoDataFrame(df_active, geometry=geometry)
+    
+    # Pad the 'Time' column with leading zeros to ensure it has 4 digits
+    gdf_active['HHMM'] = gdf_active['HHMM'].astype(str).str.zfill(4)
+    
+    # Combine the 'Date' and 'Time' columns into a single string
+    gdf_active['DateTime'] = gdf_active['YYYYMMDD'].astype(str) + gdf_active['HHMM'].astype(str)
+    gdf_active['Date'] = gdf_active['YYYYMMDD'].astype(str)
+    
+    # Convert the combined string to a pandas datetime column
+    gdf_active['DateTime'] = pd.to_datetime(gdf_active['DateTime'], format='%Y%m%d%H%M')
+    gdf_active['Date'] = pd.to_datetime(gdf_active['Date'], format='%Y%m%d')
+
+    # CORRECTED: Use AND operator to get dates within the range
+    test_active = gdf_active[(gdf_active['DateTime'] >= date_min) & (gdf_active['DateTime'] <= date_max)] 
+    return test_active
+
+def create_daily_nc_files(gdf_day, output_dir, day):
+    """
+    Create NetCDF file for a single day with mean FRP binned to 0.5° grid
+    """
+    # Create 0.5° grid bins
+    gdf_day['lon_bin'] = (gdf_day.geometry.x / 0.5).apply(np.floor) * 0.5 + 0.25
+    gdf_day['lat_bin'] = (gdf_day.geometry.y / 0.5).apply(np.floor) * 0.5 + 0.25
+    
+    # Group by bins and calculate mean FRP
+    binned = gdf_day.groupby(['lon_bin', 'lat_bin']).agg(
+        FRP_mean=('FRP', 'mean'),
+        counts=('FRP', 'count')
+    ).reset_index()
+    
+    # Create coordinate arrays for the grid
+    lon_unique = np.sort(binned['lon_bin'].unique())
+    lat_unique = np.sort(binned['lat_bin'].unique())
+    
+    # Create empty arrays for the full grid
+    frp_grid = np.full((len(lat_unique), len(lon_unique)), np.nan)
+    counts_grid = np.full((len(lat_unique), len(lon_unique)), 0)
+    
+    # Fill the arrays with data
+    for _, row in binned.iterrows():
+        lon_idx = np.where(lon_unique == row['lon_bin'])[0][0]
+        lat_idx = np.where(lat_unique == row['lat_bin'])[0][0]
+        frp_grid[lat_idx, lon_idx] = row['FRP_mean']
+        counts_grid[lat_idx, lon_idx] = row['counts']
+    
+    # Create xarray Dataset
+    ds = xr.Dataset({
+        'FRP_mean': (['latitude', 'longitude'], frp_grid),
+        'counts': (['latitude', 'longitude'], counts_grid)
+    }, coords={
+        'longitude': lon_unique,
+        'latitude': lat_unique,
+        'time': pd.to_datetime(day)
+    })
+    
+    # Add attributes
+    ds['FRP_mean'].attrs = {
+        'long_name': 'Mean Fire Radiative Power',
+        'units': 'MW',
+        'description': 'Mean FRP value in 0.5° grid cells'
+    }
+    
+    ds['counts'].attrs = {
+        'long_name': 'Number of fire detections',
+        'units': 'count',
+        'description': 'Number of fire detections in 0.5° grid cells'
+    }
+    
+    ds.attrs = {
+        'title': f'Daily Fire Radiative Power - {day.strftime("%Y-%m-%d")}',
+        'institution': 'Your Institution',
+        'source': 'MODIS Active Fires',
+        'history': f'Created {pd.Timestamp.now().strftime("%Y-%m-%d")}',
+        'grid_resolution': '0.5 degrees'
+    }
+    
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Save to NetCDF
+    output_file = os.path.join(output_dir, f"{day.strftime('%Y%m%d')}_MODIS_FRP_daily.nc")
+    ds.to_netcdf(output_file)
+    print(f"Created: {output_file}")
+    
+    return output_file
+def create_daily_nc_files_efficient(gdf_day, day):
+    """
+    More efficient version using np.digitize
+    """
+    # Create uniform global grid coordinates (1° resolution)
+    lon_edges = np.linspace(-180, 180, 361)  # 361 edges for 360 cells
+    lat_edges = np.linspace(-90, 90, 181)    # 181 edges for 180 cells
+    lon_centers = (lon_edges[:-1] + lon_edges[1:]) / 2
+    lat_centers = (lat_edges[:-1] + lat_edges[1:]) / 2
+    
+    # Create empty arrays
+    frp_sum = np.zeros((180, 360))
+    counts  = np.zeros((180, 360), dtype=int)
+    
+    # Get coordinates
+    lons = gdf_day.geometry.x.values
+    lats = gdf_day.geometry.y.values
+    frp_values = gdf_day['FRP'].values
+    
+    # Bin the data
+    lon_idx = np.digitize(lons, lon_edges) - 1
+    lat_idx = np.digitize(lats, lat_edges) - 1
+    
+    # Filter indices that are within bounds
+    valid_mask = (lon_idx >= 0) & (lon_idx < 360) & (lat_idx >= 0) & (lat_idx < 180)
+    lon_idx = lon_idx[valid_mask]
+    lat_idx = lat_idx[valid_mask]
+    frp_values = frp_values[valid_mask]
+    
+    # Accumulate sums and counts
+    for i, (lat_i, lon_i, frp_val) in enumerate(zip(lat_idx, lon_idx, frp_values)):
+        frp_sum[lat_i, lon_i] += frp_val
+        counts[lat_i, lon_i] += 1
+    
+    # Calculate mean FRP
+    frp_mean = np.divide(frp_sum, counts, where=counts > 0, out=np.full_like(frp_sum, np.nan))
+    
+    # Create Dataset
+    ds = xr.Dataset({
+        'FRP_mean': (['latitude', 'longitude'], frp_mean),
+        'counts': (['latitude', 'longitude'], counts)
+    }, coords={
+        'longitude': lon_centers,
+        'latitude': lat_centers,
+        'time': pd.to_datetime(day)
+    })
+    ds.attrs = {
+        'resolution': f'2 degrees',}
+    
+    return ds
 
 
 
