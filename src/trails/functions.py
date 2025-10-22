@@ -1,26 +1,17 @@
-import sys
 import os
 import re
-import gc
 import datetime
-import time
 import numpy as np
-import toml
 import bcolz
-import matplotlib
-import matplotlib.dates as mdates
 import xarray as xr
-from multiprocessing import Pool, cpu_count, Manager
-from tqdm import tqdm
-import numpy.ma as ma
 from collections import defaultdict
 import warnings
 warnings.filterwarnings("ignore")
-from pyproj import Proj, transform
+from pyproj import Proj
 import rasterio
 from affine import Affine
 
-# COPIED FROM TRACE
+# COPIED FROM trace_airmss_source code: https://github.com/martin-rdz/trace_airmass_source
 def read_flexpart_traj_meta(fname, ncluster = 5):
     """ """
     
