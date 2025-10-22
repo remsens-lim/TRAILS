@@ -153,4 +153,4 @@ FRP_MAJOR_THRESHOLD = 100
 Radenz, M., Seifert, P., Baars, H., Floutsi, A. A., Yin, Z., and Bühl, J.: Automated time–height-resolved air mass source attribution for profiling remote sensing applications, Atmos. Chem. Phys., 21, 3015–3033, https://doi.org/10.5194/acp-21-3015-2021, 2021.
 
 ### Licence
-See the LICENSE file for more information Copyright 2025, Johanan Roschke [MIT License](https://opensource.org/license/mit) 
+See the [LICENSE file](https://github.com/remsens-lim/TRAILS/blob/main/LICENCE) for more information Copyright 2025, Johanan Roschke [MIT License](https://opensource.org/license/mit) 
