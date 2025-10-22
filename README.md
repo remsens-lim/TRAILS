@@ -16,7 +16,7 @@ Full documentation and methodology are detailed in the accompanying publication:
 
 ## Overview
 
-**TRAILS** (TRAjectory-based Identification of Lofted Smoke) processes **FLEXPART particle positions** to classify the influence of different air mass types — including **smoke**, **dust**, and **stratospheric smoke** — using **OMPS UVAI** and **MODIS FRP** satellite data.
+**TRAILS** (TRAjectory-based Identification of Lofted Smoke) processes **FLEXPART particle positions** to classify the influence of smoke using **OMPS UVAI** and **MODIS FRP** satellite data.
 
 ---
 
