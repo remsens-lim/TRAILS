@@ -187,7 +187,7 @@ def create_daily_nc_files(gdf_day, output_dir, day):
         'institution': 'Your Institution',
         'source': 'MODIS Active Fires',
         'history': f'Created {pd.Timestamp.now().strftime("%Y-%m-%d")}',
-        'grid_resolution': '0.5 degrees'
+        'grid_resolution': '1 degrees'
     }
     
     # Create output directory if it doesn't exist
@@ -246,7 +246,7 @@ def create_daily_nc_files_efficient(gdf_day, day):
         'time': pd.to_datetime(day)
     })
     ds.attrs = {
-        'resolution': f'2 degrees',}
+        'resolution': f'1 degrees',}
     
     return ds
 
