@@ -1,18 +1,14 @@
 import sys
 import os
 import re
-import gc
 import datetime
 import time
 import numpy as np
 import toml
-import bcolz
-import matplotlib
 import matplotlib.dates as mdates
 import xarray as xr
-from multiprocessing import Pool, cpu_count, Manager
+from multiprocessing import Pool, cpu_count
 from tqdm import tqdm
-import numpy.ma as ma
 import functions as funct
 from pathlib import Path
 # Configuration
