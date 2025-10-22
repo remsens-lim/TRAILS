@@ -112,7 +112,7 @@ Define dates to process and time resolution (step). Trajectories are calculated 
    short_name = 'leipzig'
    lat = 51.3397
    lon = 12.3731
-   altitude = 113
+   altitude = 113 # in meters
 ```
 In ```python main.py``` u can also change thresholds as explained in the manuscript:
 
@@ -149,3 +149,8 @@ MODIS_DEGREE = 1
 FRP_THRESHOLD = 50
 FRP_MAJOR_THRESHOLD = 100
 ```
+### References 
+Radenz, M., Seifert, P., Baars, H., Floutsi, A. A., Yin, Z., and Bühl, J.: Automated time–height-resolved air mass source attribution for profiling remote sensing applications, Atmos. Chem. Phys., 21, 3015–3033, https://doi.org/10.5194/acp-21-3015-2021, 2021.
+
+### Licence
+See the LICENSE file for more information Copyright 2025, Johanan Roschke [MIT License](https://opensource.org/license/mit) 
