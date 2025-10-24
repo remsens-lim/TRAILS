@@ -15,7 +15,7 @@ from pathlib import Path
 # CORRECT PATH: Go up 2 levels to project root, then into config folder
 script_dir = Path(__file__).parent  # This is /.../TRAILS/src/trails/
 project_root = script_dir.parent.parent  # Go up 2 levels to /.../TRAILS/
-config_file = project_root / "config" / "config_leipzig.toml"
+config_file = project_root / "config" / "config_invercargill.toml"
 
 with open(config_file) as f:
     config = toml.load(f)
@@ -29,9 +29,9 @@ DUST_LAT_MIN, DUST_LAT_MAX = -30, 30
 DUST_LON_MIN, DUST_LON_MAX = -180, 180
 
 
-N_DATA      = config["time"]["tr_duration"]/config["time"]["step"]
-N_LEVELS    = config["height"]["top"]/config["flexpart"]["no_particles"]
-N_PARTICLES = config["flexpart"]["no_particles"]
+N_DATA      = int(abs(config["time"]["tr_duration"]/config["time"]["step"]))
+N_LEVELS    = int(config["height"]["top"]/config["flexpart"]["no_particles"])
+N_PARTICLES = int(config["flexpart"]["no_particles"])
 
 # ADDED OR SUBSTRACTED TO Smoke height regression 
 H_UVAI_TROPO_ADD = 2
@@ -80,6 +80,7 @@ class ProgressTracker:
 
 
 def process_arrival_time(args):
+    
     dt, config, it, tracker = args
     start_time = time.time()
     #print(f"⏳ Starting arrival time: {dt.strftime('%Y-%m-%d %H:%M')} (Index {it})")
@@ -158,7 +159,7 @@ def process_arrival_time(args):
         #uvai_map =  load_uvai_map(particle_time)
         #frp_map  =  load_frp_map(particle_time)
         
-        
+        print("_____________________________________")
         uvai_cache[date_key] = funct.load_uvai_map(config, particle_time, which="Mean")   
         uvai_map = uvai_cache[date_key]
         
@@ -215,7 +216,7 @@ def process_arrival_time(args):
         # Get UVAI values for THIS DAY
         uvai_vals     = funct.get_uvai_for_coords(uvai_map, lat_arr[i], lon_arr[i])
         uvai_max_vals = funct.get_uvai_for_coords(uvai_max_map, lat_arr[i], lon_arr[i])
-        frp_vals      = funct.get_frp_for_coords(frp_map, lat_arr[i], lon_arr[i])
+        #frp_vals      = funct.get_frp_for_coords(frp_map, lat_arr[i], lon_arr[i])
         lc_vals       = funct.get_LCcat_for_coords(lc_map, lc_lon, lc_lat, lat_arr[i], lon_arr[i])
         
        # major_fire         = frp_vals > FRP_MAJOR_THRESHOLD
@@ -394,7 +395,7 @@ def process_single_day(current_date, config):
     n_end_time = len(dt_list)
     
     print(f"   📊 Processing {n_end_time} arrival times")
-    
+
     # Preallocate global arrays for this day only
     global_arrays = {
         'class':  np.empty((N_DATA, N_LEVELS, N_PARTICLES, n_end_time), dtype=np.int8),
@@ -405,7 +406,7 @@ def process_single_day(current_date, config):
         'lon':    np.empty((N_DATA, N_LEVELS, N_PARTICLES, n_end_time), dtype=np.float32),
         'lat':    np.empty((N_DATA, N_LEVELS, N_PARTICLES, n_end_time), dtype=np.float32),
     }
-    
+   
     time_data = []
     traj_end = []
     
@@ -483,7 +484,7 @@ def main():
      # Get dates from config
     start_date = datetime.datetime.fromisoformat(config["time"]["begin"])
     end_date = datetime.datetime.fromisoformat(config["time"]["end"])
-    
+   
     current_date = start_date
     
     # Process each day individually

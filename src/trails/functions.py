@@ -234,20 +234,26 @@ def get_LCcat_for_coords(lc_map, lc_lon, lc_lat, lats, lons):
 def load_uvai_map(config, dt, which):
     """Load daily UVAI map for given datetime (ignores time of day)"""
     date_str = dt.strftime("%Y%m%d")
-    path =  config["omps_dir"]+ f"{dt.year}/"
-    file = f"{path}{date_str}_OMPS-NPP_NMMIEAI-L2_UVAI.nc"
-     
+    path =  config["omps_dir"]
+    
+    file = path + f"{date_str}_OMPS-NPP_NMMIEAI-L2_UVAI.nc"
+    print("________________________________________________________")
+    print(file)
     #print(file)
     if not os.path.exists(file):
         print(f"⚠️ Missing UVAI file: {file}")
         return np.zeros((180, 360))  # Fallback
     
     dataset = xr.open_dataset(file)
+    print(dataset)
+    print("________________________________________________________")
     if which == "Max":
         uvai_max = dataset.uvai_max.values.T
+        
         uvai  = np.ma.masked_where(uvai_max   <= 0, uvai_max  )
     elif which == "Mean":
         uvai_mean = dataset.uvai_mean.values.T
+       
         uvai = np.ma.masked_where(uvai_mean  <= 0, uvai_mean )
         
     return uvai
