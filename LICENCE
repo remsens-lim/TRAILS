@@ -16,7 +16,7 @@ Third-party code used in this project:
    - Authored by John F Burkhart <jfburkhart@gmail.com>, with contributions by Francesc Alted <falted@gmail.com>  
    - Licensed under Creative Commons (as per original source)
 
-2. Configuration structure inspired by trace_airmass_source  
+2. Configuration structure and idea inspired by trace_airmass_source  
    - https://github.com/martin-rdz/trace_airmass_source  
    - Authored by Martin Radenz  
    - Licensed under MIT License

@@ -1,39 +1,30 @@
 import sys
 import os
 import re
-import datetime
-import time
-import numpy as np
-import toml
-import matplotlib.dates as mdates
-import xarray as xr
-from multiprocessing import Pool, cpu_count
-from tqdm import tqdm
-import functions as funct
-from pathlib import Path
-
-
-import sys
-import os
-import re
 import gc
-import datetime
 import time
+import warnings
+from collections import defaultdict
+from multiprocessing import Pool, cpu_count, Manager
+from pathlib import Path
+import datetime
+
 import numpy as np
+import numpy.ma as ma
 import toml
 import bcolz
 import matplotlib
 import matplotlib.dates as mdates
 import xarray as xr
-from multiprocessing import Pool, cpu_count, Manager
 from tqdm import tqdm
-import numpy.ma as ma
-from collections import defaultdict
-import warnings
-warnings.filterwarnings("ignore")
 from pyproj import Proj, transform
 import rasterio
 from affine import Affine
+
+import functions as funct
+
+# Set warnings filter
+warnings.filterwarnings("ignore")
 
 def read_flexpart_traj_meta(fname, ncluster = 5):
     """ """

@@ -37,14 +37,13 @@ Before running TRAILS, ensure you have:
 
 ### Installation
 
-1. **Clone the repository:**
+1. **The package can be installed via pip:**
 ```bash
-git clone https://github.com/yourusername/TRAILS.git
-cd TRAILS
+python -m pip install git+https://github.com/remsens-lim/TRAILS
 ```
-2. **Install dependencies:**
+2. **Install the package :**
 ```bash
-pip install -r requirements.txt
+python setup.py install
 ```
 3. **Run the main script:**
 ```bash
