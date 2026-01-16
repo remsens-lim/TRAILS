@@ -379,8 +379,8 @@ def process_arrival_time(args):
     particle_wildfire   = np.zeros((N_LEVELS, N_PARTICLES), dtype=bool)
 
     ### LAND SURFACE DATA AND ELEVATION ###
-    lc_lon, lc_lat, lc_map       = funct.load_LC_map()
-    el_lon, el_lat, elevation_map = funct.load_elevation_map()   
+    lc_lon, lc_lat, lc_map       = funct.load_LC_map(config)
+    el_lon, el_lat, elevation_map = funct.load_elevation_map(config)   
     
     # Load and process all files
     for i, f in enumerate(files):
@@ -389,13 +389,13 @@ def process_arrival_time(args):
         particle_time = part_times[i]
         date_key = particle_time.strftime("%Y%m%d")
         
-        uvai_cache[date_key] = funct.load_uvai_map(particle_time)   
+        uvai_cache[date_key] = funct.load_uvai_map(config, particle_time)   
         uvai_map = uvai_cache[date_key]
         
-        uvai_max_cache[date_key] = funct.load_uvai_map(particle_time)   
+        uvai_max_cache[date_key] = funct.load_uvai_map(config,particle_time)   
         uvai_max_map = uvai_max_cache[date_key]
 
-        frp_cache[date_key] = funct.load_frp_map(particle_time)
+        frp_cache[date_key] = funct.load_frp_map(config, particle_time)
         frp_map = frp_cache[date_key]
 
         # Assuming part_pos is a bcolz ctable returned from read_partpositions
@@ -726,7 +726,7 @@ def main():
     
     # Date range setup - now for multiple days
     start_date = datetime.datetime(2023, 5, 14)
-    end_date   = datetime.datetime(2023, 7, 20)  # Example: 7 days
+    end_date   = datetime.datetime(2023, 5, 15)  # Example: 7 days
     current_date = start_date
     # We need the memory efect also for tropospheric smoke logic, otherwise we 
     # have tropospheric smoke identification over the atlantic and too low altitudes.. which eventually increase SOF within the PBL

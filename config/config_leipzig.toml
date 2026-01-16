@@ -13,18 +13,18 @@
 
 output_dir    = "/projekt1/remsens/work/jroschke/data/Leipzig/Tropos/TRACE/dataset/"
 plot_dir      = "/projekt1/remsens/work/jroschke/data/Leipzig/TRACE/leipzig/figures/"
-traj_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2025/"
-partposit_dir = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2025/" 
+traj_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2023_agl/"
+partposit_dir = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/flexpart/2023_agl/" 
 
-
-omps_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/2025/"
+frp_dir        = "/projekt1/remsens/work/jroschke/data/MODIS/"
+omps_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/2023/"
 
 LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
-
+elevation     = "/projekt1/remsens/work/jroschke/repositories/SMOKE/trace_smoke/elevation_global_1d.nc"
 [time]
     # dates to be processed
-    begin = '2025-06-05_00'
-    end   = '2025-06-09_23'
+    begin = '2023-05-05_00'
+    end   = '2023-08-09_23'
     # time step for which trajectories are calculated
     step = 3
     # duration of each trajectory
