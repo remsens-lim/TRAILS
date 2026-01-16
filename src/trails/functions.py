@@ -231,31 +231,22 @@ def get_LCcat_for_coords(lc_map, lc_lon, lc_lat, lats, lons):
     return lc_map[lat_idx, lon_idx].reshape(lats.shape)
 
 
-def load_uvai_map(config, dt, which):
+def load_uvai_map(config, dt):
     """Load daily UVAI map for given datetime (ignores time of day)"""
     date_str = dt.strftime("%Y%m%d")
     path =  config["omps_dir"]
     
     file = path + f"{date_str}_OMPS-NPP_NMMIEAI-L2_UVAI.nc"
-    print("________________________________________________________")
-    print(file)
+    
     #print(file)
     if not os.path.exists(file):
         print(f"⚠️ Missing UVAI file: {file}")
         return np.zeros((180, 360))  # Fallback
     
     dataset = xr.open_dataset(file)
-    print(dataset)
-    print("________________________________________________________")
-    if which == "Max":
-        uvai_max = dataset.uvai_max.values.T
-        
-        uvai  = np.ma.masked_where(uvai_max   <= 0, uvai_max  )
-    elif which == "Mean":
-        uvai_mean = dataset.uvai_mean.values.T
-       
-        uvai = np.ma.masked_where(uvai_mean  <= 0, uvai_mean )
-        
+    uvai_max = dataset.uvai_max.values.T
+    uvai  = np.ma.masked_where(uvai_max   <= 0.7, uvai_max  )
+
     return uvai
 
 
@@ -316,4 +307,18 @@ def load_LC_map(config):
     
     lat = northings[:, 0]
     return lon, lat, ls_data
+
+
+# FLEXPART caclulates heights above ground level, UVAI relates to above mean sea level -- this needs to be corrected using elevation 
+
+def load_elevation_map():
+    """Load daily elevation map """
+    
+    file = f"/projekt1/remsens/work/jroschke/repositories/SMOKE/trace_smoke/elevation_global_1d.nc"
+    
+    
+    dataset = xr.open_dataset(file)
+    elevation = dataset.elevation.values
+    
+    return dataset.longitude.values, dataset.latitude.values, np.ma.masked_invalid(elevation).filled(0)
 

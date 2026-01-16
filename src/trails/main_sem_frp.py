@@ -15,17 +15,17 @@ from pathlib import Path
 # CORRECT PATH: Go up 2 levels to project root, then into config folder
 script_dir = Path(__file__).parent  # This is /.../TRAILS/src/trails/
 project_root = script_dir.parent.parent  # Go up 2 levels to /.../TRAILS/
-config_file = project_root / "config" / "config_invercargill.toml"
+config_file = project_root / "config" / "config_leipzig.toml"
 
 with open(config_file) as f:
     config = toml.load(f)
 
 
 # Constants
-AFRICA_LAT_MIN, AFRICA_LAT_MAX = -35, 37
+AFRICA_LAT_MIN, AFRICA_LAT_MAX = 12, 37
 AFRICA_LON_MIN, AFRICA_LON_MAX = -20, 55
 
-DUST_LAT_MIN, DUST_LAT_MAX = -30, 30
+DUST_LAT_MIN, DUST_LAT_MAX = 12, 30
 DUST_LON_MIN, DUST_LON_MAX = -180, 180
 
 
@@ -42,7 +42,7 @@ UVAI_THRESHOLD = 0.7
 
 # Stratospheric smoke uvai thresholds
 UVAI_STRAT_THRESHOLD = 10
-UVAI_STRAT_POST_THRESHOLD = 3
+UVAI_STRAT_POST_THRESHOLD = 2
 
 # dust uvai maximum threshold and maximum plume height
 UVAI_DUST = 5
@@ -159,7 +159,7 @@ def process_arrival_time(args):
         #uvai_map =  load_uvai_map(particle_time)
         #frp_map  =  load_frp_map(particle_time)
         
-        print("_____________________________________")
+        
         uvai_cache[date_key] = funct.load_uvai_map(config, particle_time, which="Mean")   
         uvai_map = uvai_cache[date_key]
         
@@ -173,7 +173,7 @@ def process_arrival_time(args):
         print("Folder: " , folder ,"position", i,  "Load particle data" , f )
         print(f"  🌍 Loaded UVAI for {date_key}")
        
-        print("___________________________________")
+        
         #part_pos = read_partpositions(folder + f, 1, ctable=True)
         #part_pos = np.array(part_pos)
         #part_pos_reshaped = part_pos.reshape((N_LEVELS, N_PARTICLES, -1))
@@ -306,6 +306,11 @@ def process_arrival_time(args):
         # Compute smoke height thresholds only for valid UVAI
         uv_max_hs = np.where(uvai_valid, (0.51 * uvai_vals + 2.2 + H_UVAI_TROPO_ADD) * 1000, np.nan)
         uv_min_hs = np.where(uvai_valid, (0.51 * uvai_vals + 2.2 - H_UVAI_TROPO_SUB) * 1000, np.nan)
+        
+        # AFRICAN BIOMASS BURNING
+        #uv_max_hs = np.where(uvai_valid, (0.61 * uvai_vals + 2.2 + H_UVAI_TROPO_ADD) * 1000, np.nan)
+        #uv_min_hs = np.where(uvai_valid, (0.61 * uvai_vals + 2.2 - H_UVAI_TROPO_SUB) * 1000, np.nan)
+
 
         # Update memory flags
         passed_africa    |= in_africa_now
@@ -371,6 +376,18 @@ def process_arrival_time(args):
     duration = time.time() - start_time
     print(f"Completed arrival time: {dt.strftime('%Y-%m-%d %H:%M')} in {duration:.1f} seconds")
     tracker.update()
+    # DEBUG: Check if we're actually missing the last values
+    print(f"🔍 DEBUG - Array shapes before return:")
+    print(f"   lon_arr shape: {lon_arr.shape}, last value: {lon_arr[-1, 0, 0]}")
+    print(f"   lat_arr shape: {lat_arr.shape}, last value: {lat_arr[-1, 0, 0]}")
+    print(f"   class_arr shape: {class_arr.shape}")
+    print(f"   Processed {len(files)} files for {len(part_times)} expected timesteps")
+    
+    # Check if the last timestep has valid data
+    last_lon_valid = np.sum(~np.isnan(lon_arr[-1]))
+    last_lat_valid = np.sum(~np.isnan(lat_arr[-1]))
+    print(f"   Valid values in last lon timestep: {last_lon_valid}/{lon_arr[-1].size}")
+    print(f"   Valid values in last lat timestep: {last_lat_valid}/{lat_arr[-1].size}")
     
     return {
         'class': class_arr,
@@ -427,6 +444,14 @@ def process_single_day(current_date, config):
         idx = res['index']
         for key in global_arrays:
             global_arrays[key][..., idx] = res[key]
+            # Debug shapes
+            print(f"🔍 SHAPE DEBUG:")
+            print(f"   global_arrays['lon'] shape: {global_arrays['lon'].shape}")  # Should be (80, 30, 500, 8)
+            print(f"   res['lon'] shape: {res['lon'].shape}")  # Should be (80, 30, 500)
+            
+            # Check if we're getting the expected last values
+            print(f"   Last lon value in res: {res['lon'][-1, 0, 0]}")
+            print(f"   After assignment, last lon value in global_arrays: {global_arrays['lon'][-1, 0, 0, idx]}")
         time_data.append(res['times'])
         traj_end.append(res['arrival_time'])
     
@@ -498,7 +523,7 @@ def main():
             # Save to netCDF for this day
             date_str = current_date.strftime("%Y%m%d")
             station = config["station"]["short_name"]
-            output_path = config["output_dir"] +f"/{date_str}_trails_{station}.nc"
+            output_path = config["output_dir"] +f"/{date_str}_trails_{station}_test.nc"
             
             print(f"Saving results to {output_path}")
             ds.to_netcdf(output_path, format='NETCDF4')
