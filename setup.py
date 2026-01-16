@@ -24,7 +24,6 @@ setup(
         'pandas',
         'openpyxl',
         'toml',
-        'bcolz',
         'tqdm',
         'pyproj',
         'rasterio',
