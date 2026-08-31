@@ -4,12 +4,9 @@ output_dir    = "/projekt1/remsens/work/jroschke/data/Invercargill/TRACE/"
 plot_dir      = "/projekt1/remsens/work/jroschke/data/Invercargill/TRACE/invercargill/figures/"
 traj_dir      = "/projekt7/remsens/data_new/site-campaign/invercargill/flexpart/"
 partposit_dir = "/projekt7/remsens/data_new/site-campaign/invercargill/flexpart/" 
-
-
-omps_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/2025/"
-
+omps_dir      = "/projekt7/remsens/data_new/site-campaign/tawhaki-acadia/Suomi_NPP/OMPS_UVAI_daily/"
 LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
-
+elevation     = "/projekt1/remsens/work/jroschke/repositories/SMOKE/trace_smoke/elevation_global_1d.nc"
 [time]
 
     begin = '2025-09-02_00'

@@ -1,14 +1,15 @@
 
+output_dir    = "/path_to_/output/"
+plot_dir      = "/path_to_/figures/"
+traj_dir      = "/path_to_/flexpart_particle_positions/"
+partposit_dir = "/path_to_/flexpart_particle_positions/" 
 
-output_dir    = "/projekt1/remsens/work/jroschke/data/Limassol/TRACE/"
-plot_dir      = "/projekt1/remsens/work/jroschke/data/Limassol/TRACE/limassol/figures/"
-traj_dir      = "/projekt7/remsens/data_new/site-campaign/limassol/flexpart/"
-partposit_dir = "/projekt7/remsens/data_new/site-campaign/limassol/flexpart/" 
+frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
+omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
+LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
 
 
-omps_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/2025/"
-
-LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
+elevation     = "/path_to/data/input/elevation_global_1d.nc"
 
 [time]
 
@@ -52,10 +53,10 @@ LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
     height_ratios = [7,1]
 
 [height]
-    #top = 18000
+    top = 18000
     base = 500
     interval = 500
-    top = 15000
+    #top = 15000
     plottop = 12250
     # 'md' mixing depth, '2.0' in km without
     reception = ['md', '2.0', '5.0', '8.0', '10.0']

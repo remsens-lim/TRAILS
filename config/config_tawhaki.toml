@@ -1,25 +1,16 @@
 # configuration file for TRAILS
+output_dir    = "/path_to_/output/"
+plot_dir      = "/path_to_/figures/"
+traj_dir      = "/path_to_/flexpart_particle_positions/"
+partposit_dir = "/path_to_/flexpart_particle_positions/" 
+
+frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
+omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
+LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
 
 
-#output_dir    = "/path_to_/output/"
-#plot_dir      = "/path_to_/figures/"
-#traj_dir      = "/path_to_/flexpart_particle_positions/"
-#partposit_dir = "/path_to_/flexpart_particle_positions/" 
-#
-#frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
-#omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
-#LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
+elevation     = "/path_to/data/input/elevation_global_1d.nc"
 
-
-output_dir    = "/projekt1/remsens/work/jroschke/data/Tawhaki/"
-plot_dir      = "/projekt1/remsens/work/jroschke/data/Tawhaki/"
-traj_dir      = "/projekt7/remsens/data_new/site-campaign/tawhaki/FLEXPART/"
-partposit_dir = "/projekt7/remsens/data_new/site-campaign/tawhaki/FLEXPART/" 
-
-
-omps_dir      = "/projekt7/remsens/data_new/site-campaign/leipzig-tropos/suomi/nc/2025/"
-
-LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
 
 [time]
     # dates to be processed
