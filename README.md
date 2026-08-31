@@ -50,6 +50,33 @@ python setup.py install
 python src/trails/main.py
 ```
 
+### Run
+Its recommended to create individual config files for each station. The path to the config file is hardcoded near the top of `main.py`:
+
+```python
+config_file = project_root / "config" / "config_leipzig.toml"
+```
+
+Before running, edit this line to point to your own TOML config file (or rename your config file to `config_leipzig.toml` and place it in the `config/` folder — either works, but the filename is not passed as an argument).
+
+
+Also edit the date range in `main()`:
+
+```python
+start_date = datetime.datetime(2023, 5, 14)
+end_date   = datetime.datetime(2023, 5, 15)
+```
+
+The script processes each day in this range individually and writes one NetCDF file per day.
+
+Call from the project root:
+
+```bash
+python src/trails/main.py
+```
+
+
+
 ### Config files
 
 TRAILS can be configured using TOML files located in `config/station_name.toml`. Examples are provided for station Leipzig. For each station, the configuration file should be updated with the corresponding directories for the input grids. Jupyter notebooks are provided to create OMPS UVAI global grids from swaths, as well as for MODIS/VIIRS
@@ -148,8 +175,11 @@ MODIS_DEGREE = 1
 FRP_THRESHOLD = 50
 FRP_MAJOR_THRESHOLD = 100
 ```
+
+
+
 ### References 
 Radenz, M., Seifert, P., Baars, H., Floutsi, A. A., Yin, Z., and Bühl, J.: Automated time–height-resolved air mass source attribution for profiling remote sensing applications, Atmos. Chem. Phys., 21, 3015–3033, https://doi.org/10.5194/acp-21-3015-2021, 2021.
 
 ### Licence
-See the [LICENSE file](https://github.com/remsens-lim/TRAILS/blob/main/LICENCE) for more information Copyright 2025, Johanan Roschke [MIT License](https://opensource.org/license/mit) 
+See the [LICENSE file](https://github.com/remsens-lim/TRAILS/blob/main/LICENCE) for more information Copyright 2025, Johanna Roschke [MIT License](https://opensource.org/license/mit) 
