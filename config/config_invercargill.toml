@@ -1,16 +1,22 @@
 
+output_dir    = "/path_to_/output/"
+plot_dir      = "/path_to_/figures/"
+traj_dir      = "/path_to_/flexpart_particle_positions/"
+partposit_dir = "/path_to_/flexpart_particle_positions/" 
 
-output_dir    = "/projekt1/remsens/work/jroschke/data/Invercargill/TRACE/"
-plot_dir      = "/projekt1/remsens/work/jroschke/data/Invercargill/TRACE/invercargill/figures/"
-traj_dir      = "/projekt7/remsens/data_new/site-campaign/invercargill/flexpart/"
-partposit_dir = "/projekt7/remsens/data_new/site-campaign/invercargill/flexpart/" 
-omps_dir      = "/projekt7/remsens/data_new/site-campaign/tawhaki-acadia/Suomi_NPP/OMPS_UVAI_daily/"
-LCType_dir    = "/projekt1/remsens/work/jroschke/data/"
-elevation     = "/projekt1/remsens/work/jroschke/repositories/SMOKE/trace_smoke/elevation_global_1d.nc"
+frp_dir       = "/path_to/MODIS_1Degree_daily_grids/"
+omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
+LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
+
+
+elevation     = "/path_to/data/input/elevation_global_1d.nc"
+
+
+
 [time]
 
-    begin = '2025-09-02_00'
-    end = '2025-09-03_00'
+    begin = '2025-09-02'
+    end   = '2025-09-03'
     # time step for which trajectories are calculated
     step = 3
     # duration of each trajectory
