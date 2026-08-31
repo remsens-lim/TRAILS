@@ -76,7 +76,6 @@ python src/trails/main.py
 ```
 
 
-
 ### Config files
 
 TRAILS can be configured using TOML files located in `config/station_name.toml`. Examples are provided for station Leipzig. For each station, the configuration file should be updated with the corresponding directories for the input grids. Jupyter notebooks are provided to create OMPS UVAI global grids from swaths, as well as for MODIS/VIIRS
@@ -176,6 +175,14 @@ FRP_THRESHOLD = 50
 FRP_MAJOR_THRESHOLD = 100
 ```
 
+### Vizualization
+
+Open `src/scripts/example.ipynb` scipt to explore the output files. The path to the config file and the date of the file have to be specified. Plotting routines and calculation of the smoke occurrence fraction (SOF) are included. This metric represents the percentage of smoke-contaminated air parcels at a given height, determined by their cumulative residence time within smoke plumes along their trajectories:
+$$
+SOF(z) = \frac{N_{\mathrm{smoke}}}{N_{\mathrm{total}}} \times 100%
+$$
+where $z$ is the altitude bin, $N_{\mathrm{smoke}}$ is the total number of smoke-identified air parcels at altitude $z$ across all trajectories,
+$N_{\mathrm{total}}(z)$ = 500$\times$80 = 40,000. For each altitude level, 500 air parcels are released, and their positions are tracked at 3-hour intervals over 10 days (80 steps per trajectory), resulting in 40,000 potential parcel positions per level.
 
 
 ### References 
