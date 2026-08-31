@@ -182,7 +182,7 @@ Open `src/scripts/example.ipynb` scipt to explore the output files. The path to 
 SOF(z) = \frac{N_{\mathrm{smoke}}}{N_{\mathrm{total}}} \times 100\%
 ```
 where $z$ is the altitude bin, $N_{\mathrm{smoke}}$ is the total number of smoke-identified air parcels at altitude $z$ across all trajectories,
-$N_{\mathrm{total}}(z)$ = 500$\times$80 = 40,000. For each altitude level, 500 air parcels are released, and their positions are tracked at 3-hour intervals over 10 days (80 steps per trajectory), resulting in 40,000 potential parcel positions per level.
+$N_{\mathrm{total}}(z)$ = 500x80 = 40,000. For each altitude level, 500 air parcels are released, and their positions are tracked at 3-hour intervals over 10 days (80 steps per trajectory), resulting in 40,000 potential parcel positions per level.
 
 
 ### References 
