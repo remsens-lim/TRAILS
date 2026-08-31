@@ -60,14 +60,14 @@ config_file = project_root / "config" / "config_leipzig.toml"
 Before running, edit this line to point to your own TOML config file (or rename your config file to `config_leipzig.toml` and place it in the `config/` folder — either works, but the filename is not passed as an argument).
 
 
-Also edit the date range in `main()`:
+Also edit the date range in the config file:
 
 ```python
-start_date = datetime.datetime(2023, 5, 14)
-end_date   = datetime.datetime(2023, 5, 15)
+begin = '2023-05-15'
+end   = '2023-05-16'
 ```
 
-The script processes each day in this range individually and writes one NetCDF file per day.
+The script processes each day in this range (15 and 16 May) individually and writes one NetCDF file per day.
 
 Call from the project root:
 
@@ -99,7 +99,7 @@ omps_dir      = "/path_to/OMPS_UVAI_1Degree_daily_grids/"
 LCType_dir    = "/path_to/land_surface_type_global_yearly_grids/"
 ```
 #### Time settings
-Define dates to process and time resolution (step). Trajectories are calculated every 3 hours over 10 days (-240 hours backward).
+Define dates to process and time resolution (step). Trajectories are calculated every 3 hours over 10 days (-240 hours backward). This should be identical to the flexpart processing config file as explained in Radenz et al. (2021). 
 ```toml
 
 [time]
